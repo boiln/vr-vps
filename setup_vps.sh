@@ -34,7 +34,7 @@ INSTALL_DOCKER=$(prompt_yes_no "Do you want to install Docker?")
 
 # Update and upgrade packages
 echo -e "\n${YELLOW}Updating and upgrading packages...${NC}"
-apt update -y && apt upgrade -y && apt autoremove -y
+apt-get update -y && apt-get upgrade -y && apt-get autoremove -y
 tasks+=("Update and upgrade packages")
 
 # Change root password
@@ -44,7 +44,7 @@ tasks+=("Change root password")
 
 # Install and configure unattended-upgrades
 echo -e "\n${YELLOW}Installing and configuring unattended-upgrades...${NC}"
-apt install -y unattended-upgrades
+apt-get install -y unattended-upgrades
 echo 'APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Download-Upgradeable-Packages "1";
 APT::Periodic::AutocleanInterval "7";
@@ -53,7 +53,7 @@ tasks+=("Install and configure unattended-upgrades")
 
 # Install and configure UFW
 echo -e "\n${YELLOW}Installing and configuring UFW...${NC}"
-apt install -y ufw
+apt-get install -y ufw
 ufw default deny incoming
 ufw default allow outgoing
 ufw allow $SSH_PORT/tcp
@@ -62,9 +62,9 @@ tasks+=("Install and configure UFW")
 
 # Configure SSH and SFTP
 echo -e "\n${YELLOW}Configuring SSH and SFTP...${NC}"
-sudo apt install openssh-server
-sudo systemctl enable ssh
-sudo systemctl start ssh
+apt-get install -y openssh-server
+systemctl enable ssh
+systemctl start ssh
 cat > /etc/ssh/sshd_config <<EOL
 Include /etc/ssh/sshd_config.d/*.conf
 
