@@ -42,6 +42,10 @@ echo
 
 # Update information
 echo -e "${CYAN}Updates${R}"
+if [ ! -f /var/lib/update-notifier/updates-available ]; then
+  echo "  No update information available"
+fi
+
 if [ -f /var/lib/update-notifier/updates-available ]; then
   updates_pending=$(sed -n 's/^[0-9]* updates can be applied immediately\.$/\0/p' /var/lib/update-notifier/updates-available | rg -o '[0-9]*')
   security_updates=$(sed -n 's/^[0-9]* of these updates are security updates\.$/\0/p' /var/lib/update-notifier/updates-available | rg -o '[0-9]*')
@@ -50,14 +54,16 @@ if [ -f /var/lib/update-notifier/updates-available ]; then
     echo -e "  ${ORANGE}General updates${R}\t${updates_pending:-0}"
     echo -e "  ${ORANGE}Security updates${R}\t${security_updates:-0}"
   ) | column -t -s $'\t'
-else
-  echo "  No update information available"
 fi
 
 echo
 
 # Docker container information
 echo -e "${CYAN}Containers${R}"
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Docker is not installed or not accessible."
+fi
+
 if command -v docker >/dev/null 2>&1; then
   (
     # echo -e "  NAMES\tSTATUS"
@@ -66,8 +72,6 @@ if command -v docker >/dev/null 2>&1; then
       printf "  ${ORANGE}%s${R}\t%s\t%s\n" "$name" "$status" "$id"
     done
   ) | column -t -s $'\t'
-else
-  echo "Docker is not installed or not accessible."
 fi
 
 echo
@@ -79,7 +83,9 @@ execution_ms=$(echo "$execution_time * 1000" | bc | cut -d'.' -f1)
 if [ "$execution_ms" -ge 1000 ]; then
     execution_s=$(echo "scale=1; $execution_ms / 1000" | bc)
     echo -e "${CYAN}${GREEN}${execution_s} s${R}"
-else
+fi
+
+if [ "$execution_ms" -lt 1000 ]; then
     echo -e "${CYAN}${GREEN}${execution_ms} ms${R}"
 fi
 

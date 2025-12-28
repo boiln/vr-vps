@@ -92,6 +92,10 @@ systemctl restart sshd
 tasks+=("Configure SSH and SFTP")
 
 # Install Docker if requested
+if ! $INSTALL_DOCKER; then
+    echo -e "\n${YELLOW}Skipping Docker installation...${NC}"
+fi
+
 if $INSTALL_DOCKER; then
     echo -e "\n${YELLOW}Installing Docker...${NC}"
     apt-get install -y ca-certificates curl
