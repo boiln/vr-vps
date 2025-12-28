@@ -5,6 +5,8 @@ ORANGE='\033[0;33m'
 CYAN='\033[38;5;39m'
 R='\033[0m'
 
+NET_IFACE=$(ip route | awk '/default/ {print $5; exit}')
+
 start_time=$(date +%s.%N)
 
 echo -e "${ORANGE}$(date)${R}"
@@ -20,9 +22,9 @@ echo -e "${CYAN}System${R}"
     echo -e "  ${ORANGE}Logged In${R}\t$(who | wc -l)"
     echo -e "  ${ORANGE}Last login${R}\t$(last -1 $USER | awk 'NR==1 {print $4,$5,$6,$7}')"
     echo -e "  ${ORANGE}Failed SSH attempts${R}\t$(grep "Failed password" /var/log/auth.log | wc -l)"
-    echo -e "  ${ORANGE}Network traffic${R}\t$(awk '{if(NR==3) {rx=$2/1024/1024; tx=$10/1024/1024; printf "%.2f / %.2f MB ", rx, tx; if(rx+tx > 10) print "(High)"; else if(rx+tx > 1) print "(Moderate)"; else print "(Low)"}}' /proc/net/dev)"
-    echo -e "  ${ORANGE}IPv4 address${R}\t$(ip addr show ens3 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')"
-    echo -e "  ${ORANGE}IPv6 address${R}\t$(ip addr show ens3 | grep -oP '(?<=inet6\s)\S+' | head -n 1)"
+    echo -e "  ${ORANGE}Network traffic${R}\t$(awk -v iface="$NET_IFACE:" '$1 == iface {rx=$2/1024/1024; tx=$10/1024/1024; printf "%.2f / %.2f MB ", rx, tx; level="(Low)"; if(rx+tx > 1) level="(Moderate)"; if(rx+tx > 10) level="(High)"; print level}' /proc/net/dev)"
+    echo -e "  ${ORANGE}IPv4 address${R}\t$(ip addr show "$NET_IFACE" | grep -oP '(?<=inet\s)\d+(\.\d+){3}')"
+    echo -e "  ${ORANGE}IPv6 address${R}\t$(ip addr show "$NET_IFACE" | grep -oP '(?<=inet6\s)\S+' | head -n 1)"
 ) | column -t -s $'\t'
 
 echo
