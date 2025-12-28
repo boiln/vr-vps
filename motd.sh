@@ -20,6 +20,7 @@ wait
 
 # Parse gathered data
 ipv4=$(grep 'dynamic' "$tmp_ip" | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)
+ipv4_additional=$(grep -v 'dynamic' "$tmp_ip" | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 ipv6=$(grep 'scope global' "$tmp_ip" | grep -oP '(?<=inet6\s)[0-9a-f:]+' | head -1)
 
 echo -e "${ORANGE}$(date)${R}"
@@ -37,6 +38,7 @@ echo -e "${CYAN}System${R}"
     echo -e "  ${ORANGE}Failed SSH attempts${R}\t$(grep -c "Failed password" /var/log/auth.log 2>/dev/null || echo 0)"
     echo -e "  ${ORANGE}Network traffic${R}\t$(awk -v iface="$NET_IFACE:" '$1 == iface {rx=$2/1024/1024; tx=$10/1024/1024; printf "%.2f / %.2f MB ", rx, tx; level="(Low)"; if(rx+tx > 1) level="(Moderate)"; if(rx+tx > 10) level="(High)"; print level}' /proc/net/dev)"
     echo -e "  ${ORANGE}IPv4 address${R}\t$ipv4"
+    [ -n "$ipv4_additional" ] && echo -e "  ${ORANGE}IPv4 additional${R}\t$ipv4_additional"
     echo -e "  ${ORANGE}IPv6 address${R}\t$ipv6"
 ) | column -t -s $'\t'
 
