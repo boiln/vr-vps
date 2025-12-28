@@ -39,7 +39,7 @@ tasks+=("Update and upgrade packages")
 
 # Change root password
 echo -e "\n${YELLOW}Changing root password...${NC}"
-echo "root:$NEW_PASSWORD" | chpasswd
+chpasswd <<< "root:$NEW_PASSWORD"
 tasks+=("Change root password")
 
 # Install and configure unattended-upgrades
