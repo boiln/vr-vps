@@ -124,6 +124,8 @@ for task in "${tasks[@]}"; do
     echo -e "${GREEN}✓ $task${NC}"
 done
 
-echo -e "\n${YELLOW}Rebooting in 10 seconds...${NC}"
-sleep 10
-reboot
+echo -e "\n${YELLOW}A reboot is recommended to apply all changes.${NC}"
+read -p "Reboot now? (y/n): " reboot_choice
+if [ "$reboot_choice" = "y" ] || [ "$reboot_choice" = "Y" ]; then
+    reboot
+fi
