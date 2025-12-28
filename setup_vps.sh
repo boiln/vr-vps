@@ -8,7 +8,7 @@ NC='\033[0m' # No Color
 
 prompt_input() {
     read -p "$1: " value
-    echo $value
+    echo "$value"
 }
 
 prompt_yes_no() {
