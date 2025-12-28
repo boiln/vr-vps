@@ -11,5 +11,5 @@
 
 # Minimal Useful motd
 - `motd.sh` is located `/etc/profile.d/motd.sh`.
-  
-![motd](https://i.imgur.com/Qj1xys3.png)
+
+<img width="557" height="624" alt="motd" src="https://github.com/user-attachments/assets/c40a595e-dc55-40ae-8607-10b0ebd3e99d" />
