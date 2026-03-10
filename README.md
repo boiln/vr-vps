@@ -5,7 +5,7 @@ Fresh Ubuntu VPS → hardened + QoL in one command.
 ## Run
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/boiln/vr-vps/main/dist/setup.sh | bash
+curl -fsSL https://boiln.github.io/vr-vps/setup.sh | bash
 ```
 
 ## What It Does
